@@ -11,6 +11,8 @@ import WebServer from '@core/components/WebServer';
 import Logger from '@core/components/Logger';
 import si from 'systeminformation';
 import consoleFactory from '@extras/console';
+import StatisticsManager from '@core/components/StatisticsManager';
+import { QuantileArrayOutput } from '@core/components/StatisticsManager/statsUtils';
 const console = consoleFactory(modulename);
 
 
@@ -252,18 +254,45 @@ export const getHostData = async (): Promise<HostDataReturnType> => {
 
 
 /**
+ * Gets the Host Static Data from cache.
+ */
+export const getHostStaticData = (): HostStaticDataType => {
+    if (!hostStaticDataCache) {
+        throw new Error(`hostStaticDataCache not yet ready`);
+    }
+    return hostStaticDataCache;
+}
+
+
+/**
  * Gets txAdmin Data
  */
 export const getTxAdminData = async () => {
     const fxRunner = (globals.fxRunner as FXRunner);
     const webServer = (globals.webServer as WebServer);
     const logger = (globals.logger as Logger);
+    const statisticsManager = (globals.statisticsManager as StatisticsManager);
     const databus = (globals.databus as any);
 
     const humanizeOptions: HumanizerOptions = {
         round: true,
         units: ['d', 'h', 'm'],
     };
+
+    const joinTimesToString = (res: QuantileArrayOutput) => {
+        let output = 'not enough data available';
+        if (!('notEnoughData' in res)){
+            const quantileTimes = [res.count.toString()];
+            for (const [key, val] of Object.entries(res)) {
+                if (key === 'count') continue;
+                quantileTimes.push(`${Math.ceil(val)}ms`);
+            }
+            output = quantileTimes.join(' / ');
+        }
+        return output;
+    }
+    const banCheckTime = joinTimesToString(statisticsManager.banCheckTime.result());
+    const whitelistCheckTime = joinTimesToString(statisticsManager.whitelistCheckTime.result());
 
     const httpCounter = databus.txStatsData.httpCounter;
     return {
@@ -281,6 +310,8 @@ export const getTxAdminData = async () => {
         hbBootSeconds: databus.txStatsData.monitorStats.bootSeconds.join(', ') || '--',
         freezeSeconds: databus.txStatsData.monitorStats.freezeSeconds.join(', ') || '--',
         koaSessions: Object.keys(webServer.koaSessionMemoryStore.sessions).length || '--',
+        banCheckTime,
+        whitelistCheckTime,
 
         //Log stuff:
         logStorageSize: (await logger.getStorageSize()).total,

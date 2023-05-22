@@ -33,7 +33,6 @@ export default class AdminVault {
         this.adminsFileHash = null;
         this.admins = null;
         this.refreshRoutine = null;
-        this.lastAdminFile = '';
 
         //Not alphabetical order, but that's fine
         this.registeredPermissions = {
@@ -401,6 +400,8 @@ export default class AdminVault {
 
     /**
      * Refreshes admin's social login data
+     * TODO: this should be stored on PersistentCache instead of admins.json
+     *       otherwise it refreshes the admins connected
      * @param {string} name
      * @param {string} provider
      * @param {string} identifier
@@ -470,21 +471,27 @@ export default class AdminVault {
         let jsonData = null;
         let migrated = false;
 
-        const callError = (x) => {
-            console.error(`Unable to load admins. (${x}, please read the documentation)`);
+        const callError = (reason) => {
+            console.error(`Unable to load admins.json: ${reason}`);
+            if (reason === 'cannot read file') {
+                console.error('This means the file  doesn\'t exist or txAdmin doesn\'t have permission to read it.');
+            } else {
+                console.error('This likely means the file got somehow corrupted.');
+                console.error('You can rey restoring it or you can delete it and let txAdmin create a new one.');
+            }
+            console.error(`Admin File Path: ${this.adminsFile}`);
             process.exit(1);
         };
 
         try {
             raw = await fsp.readFile(this.adminsFile, 'utf8');
             this.adminsFileHash = createHash('sha1').update(raw).digest('hex');
-            if (raw === this.lastAdminFile) {
-                console.verbose.log('Admin file didn\'t change, skipping.');
-                return;
-            }
-            this.lastAdminFile = raw;
         } catch (error) {
             return callError('cannot read file');
+        }
+
+        if (!raw.length) {
+            return callError('empty file');
         }
 
         try {
@@ -495,6 +502,10 @@ export default class AdminVault {
 
         if (!Array.isArray(jsonData)) {
             return callError('not an array');
+        }
+
+        if (!jsonData.length) {
+            return callError('no admins');
         }
 
         const structureIntegrityTest = jsonData.some((x) => {
@@ -524,10 +535,6 @@ export default class AdminVault {
         const masters = jsonData.filter((x) => { return x.master; });
         if (masters.length !== 1) {
             return callError('must have exactly 1 master account');
-        }
-
-        if (!jsonData.length) {
-            return callError('no entries');
         }
 
         this.admins = jsonData;

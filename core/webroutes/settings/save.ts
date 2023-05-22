@@ -104,7 +104,7 @@ async function handleGlobal(ctx: Context) {
     }
 
     //Sending output
-    globals.func_txAdminRefreshConfig()
+    globals.func_txAdminRefreshConfig();
     globals.translator.refreshConfig();
     ctx.utils.logAction('Changing global settings.');
     return ctx.send({ type: 'success', markdown: true, message: '**Global configuration saved!**' });
@@ -209,6 +209,7 @@ async function handlePlayerDatabase(ctx: Context) {
         ctx.request.body.whitelistMode,
         ctx.request.body.whitelistedDiscordRoles,
         ctx.request.body.whitelistRejectionMessage,
+        ctx.request.body.requiredBanHwidMatches,
         ctx.request.body.banRejectionMessage,
     )) {
         return ctx.utils.error(400, 'Invalid Request - missing parameters');
@@ -216,9 +217,10 @@ async function handlePlayerDatabase(ctx: Context) {
 
     //Prepare body input
     const cfg = {
-        onJoinCheckBan: (ctx.request.body.onJoinCheckBan === 'true'),
         whitelistMode: ctx.request.body.whitelistMode.trim(),
         whitelistRejectionMessage: ctx.request.body.whitelistRejectionMessage.trim(),
+        onJoinCheckBan: (ctx.request.body.onJoinCheckBan === 'true'),
+        requiredBanHwidMatches: parseInt(ctx.request.body.requiredBanHwidMatches),
         banRejectionMessage: ctx.request.body.banRejectionMessage.trim(),
         whitelistedDiscordRoles: ctx.request.body.whitelistedDiscordRoles
             .split(',')
@@ -241,6 +243,14 @@ async function handlePlayerDatabase(ctx: Context) {
         });
     }
 
+    //Validating HWID bans
+    if (typeof cfg.requiredBanHwidMatches !== 'number' || isNaN(cfg.requiredBanHwidMatches)) {
+        return ctx.send({ type: 'danger', message: 'requiredBanHwidMatches must be a number.' });
+    }
+    if (cfg.requiredBanHwidMatches < 0 || cfg.requiredBanHwidMatches > 6) {
+        return ctx.send({ type: 'danger', message: 'The Required Ban HWID matches must be between 0 (disabled) and 6.' });
+    }
+
     //Validating custom rejection messages
     if (cfg.whitelistRejectionMessage.length > 512) {
         return ctx.send({ type: 'danger', message: 'The whitelist rejection message must be less than 512 characters.' });
@@ -255,6 +265,7 @@ async function handlePlayerDatabase(ctx: Context) {
     newConfig.whitelistMode = cfg.whitelistMode;
     newConfig.whitelistedDiscordRoles = cfg.whitelistedDiscordRoles;
     newConfig.whitelistRejectionMessage = cfg.whitelistRejectionMessage;
+    newConfig.requiredBanHwidMatches = cfg.requiredBanHwidMatches;
     newConfig.banRejectionMessage = cfg.banRejectionMessage;
     try {
         globals.configVault.saveProfile('playerDatabase', newConfig);
@@ -269,6 +280,7 @@ async function handlePlayerDatabase(ctx: Context) {
     }
 
     //Sending output
+    globals.statisticsManager.whitelistCheckTime.clear();
     globals.playerDatabase.refreshConfig();
     ctx.utils.logAction('Changing Player Manager settings.');
     return ctx.send({
@@ -297,8 +309,13 @@ async function handleMonitor(ctx: Context) {
     //Prepare body input
     let cfg = {
         restarterSchedule: ctx.request.body.restarterSchedule.split(',').map((x: string) => x.trim()),
-        resourceStartingTolerance: ctx.request.body.resourceStartingTolerance,
+        resourceStartingTolerance: parseInt(ctx.request.body.resourceStartingTolerance),
     };
+
+    //Checking if resourceStartingTolerance is valid integer
+    if (typeof cfg.resourceStartingTolerance !== 'number' || isNaN(cfg.resourceStartingTolerance)) {
+        return ctx.send({ type: 'danger', message: 'resourceStartingTolerance must be a number.' });
+    }
 
     //Validating restart times
     const { valid: validRestartTimes, invalid: invalidRestartTimes } = parseSchedule(cfg.restarterSchedule);
@@ -406,7 +423,7 @@ async function handleDiscord(ctx: Context) {
         let extraContext = '';
         if (errorCode === 'DisallowedIntents' || errorCode === 4014) {
             extraContext = `**The bot requires the \`GUILD_MEMBERS\` intent.**
-            - Go to the Dev Portal (https://discord.com/developers/applications)
+            - Go to the Discord Dev Portal (https://discord.com/developers/applications)
             - Navigate to \`Bot > Privileged Gateway Intents\`.
             - Enable the \`GUILD_MEMBERS\` intent.
             - Save on the dev portal.
@@ -419,6 +436,12 @@ async function handleDiscord(ctx: Context) {
             - **Wrong guild/server ID:** read the description of the guild/server ID setting for more information.
             - **Bot is not in the guild/server:** you need to [INVITE THE BOT](${inviteUrl}) to join the server.
             - **Wrong bot:** you may be using the token of another discord bot.`;
+        } else if (errorCode === 'DangerousPermission') {
+            extraContext = `Please keep in mind that:
+            - These permissions are dangerous because if the bot token leaks, an attacker can cause permanent damage to your server.
+            - You need to remove the permissions listed above to be able to enable this bot.
+            - No bot should have more permissions than strictly needed, specially \`Administrator\`.
+            - You should never have multiple bots using the same token, create a new one for each bot.`;
         }
         return ctx.send({
             type: 'danger',
@@ -491,6 +514,7 @@ async function handleMenu(ctx: Context) {
 
     //Sending output
     globals.config = globals.configVault.getScoped('global');
+    globals.func_txAdminRefreshConfig();
     globals.fxRunner.resetConvars();
     ctx.utils.logAction('Changing menu settings.');
     return ctx.send({

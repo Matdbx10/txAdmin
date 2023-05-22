@@ -241,10 +241,10 @@
                             </label>
                             <div class="col-sm-9">
                                 <select class="form-control" id="frmMonitor-resourceStartingTolerance" <%= readOnly ? 'disabled' : '' %>>
-                                    <option value="90" <%= monitor.resourceStartingTolerance === '90' ? 'selected' : '' %>>1.5 minutes (default)</option>
-                                    <option value="180" <%= monitor.resourceStartingTolerance === '180' ? 'selected' : '' %>>3 minutes</option>
-                                    <option value="300" <%= monitor.resourceStartingTolerance === '300' ? 'selected' : '' %>>5 minutes</option>
-                                    <option value="600" <%= monitor.resourceStartingTolerance === '600' ? 'selected' : '' %>>10 minutes</option>
+                                    <option value="90" <%= monitor.resourceStartingTolerance === 90 ? 'selected' : '' %>>1.5 minutes (default)</option>
+                                    <option value="180" <%= monitor.resourceStartingTolerance === 180 ? 'selected' : '' %>>3 minutes</option>
+                                    <option value="300" <%= monitor.resourceStartingTolerance === 300 ? 'selected' : '' %>>5 minutes</option>
+                                    <option value="600" <%= monitor.resourceStartingTolerance === 600 ? 'selected' : '' %>>10 minutes</option>
                                 </select>
                                 <span class="form-text text-muted">
                                     At server boot, how much time to wait for any single resource to start before restarting the server. <br>
@@ -359,6 +359,27 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="frmPlayerManager-requiredBanHwidMatches" class="col-sm-3 col-form-label">
+                                Required Ban <br>
+                                HWID Matches
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="form-control" id="frmPlayerManager-requiredBanHwidMatches" <%= readOnly ? 'disabled' : '' %>>
+                                    <option value="1" <%= playerDatabase.requiredBanHwidMatches === 1 ? 'selected' : '' %>>1 - recommended</option>
+                                    <option value="2" <%= playerDatabase.requiredBanHwidMatches === 2 ? 'selected' : '' %>>2 - lax</option>
+                                    <option value="3" <%= playerDatabase.requiredBanHwidMatches === 3 ? 'selected' : '' %>>3 - very lax</option>
+                                    <option value="4" <%= playerDatabase.requiredBanHwidMatches === 4 ? 'selected' : '' %>>4 - virtually disabled</option>
+                                    <option value="0" <%= playerDatabase.requiredBanHwidMatches === 0 ? 'selected' : '' %>>Disable HWID Bans</option>
+                                </select>
+                                <span class="form-text text-muted">
+                                    This option configures how many HWID tokens must match between a player and an existing ban for the player join to be blocked, or can disable HWID Bans entirely. <br>
+                                    Since Hardware ID Tokens are not guaranteed to be unique, there is the possibility of tokens from two players matching without them being related to each other. <br>
+                                    <strong>Note:</strong> Most players have 3 to 6 HWID tokens.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="frmPlayerManager-banRejectionMessage" class="col-sm-3 col-form-label">
                                 Ban Custom <br>
                                 Rejection Message
@@ -445,7 +466,7 @@
                                     placeholder="000000000000000000" <%= readOnly ? 'disabled' : '' %>>
                                 <span class="form-text text-muted">
                                     The ID of the channel to send Announcements (eg server restarts). <br>
-                                    Leave it blank to disable this feature. <br>
+                                    You can leave it blank to disable this feature. <br>
                                     To get the channel ID, go to Discord's settings and
                                     <a href="https://support.discordapp.com/hc/article_attachments/115002742731/mceclip0.png"
                                     target="_blank" > enable developer mode</a>, then right-click on the channel name and select "Copy ID".
@@ -785,6 +806,7 @@
             whitelistRejectionMessage: $('#frmPlayerManager-whitelistRejectionMessage').val().trim(),
             whitelistedDiscordRoles: $('#frmPlayerManager-whitelistedDiscordRoles').val().trim(),
             onJoinCheckBan: $('#frmPlayerManager-onJoinCheckBan').is(':checked'),
+            requiredBanHwidMatches: $('#frmPlayerManager-requiredBanHwidMatches').val(),
             banRejectionMessage: $('#frmPlayerManager-banRejectionMessage').val().trim(),
         }
         const notify = $.notify({ message: '<p class="text-center">Saving...</p>' }, {});

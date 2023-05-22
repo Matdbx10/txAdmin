@@ -91,7 +91,7 @@ const citizenRootConvar = getConvarString('citizen_root');
 if (!citizenRootConvar) {
     logDie('citizen_root convar not set');
 }
-const fxServerPath = cleanPath(citizenRootConvar);
+const fxServerPath = cleanPath(citizenRootConvar as string);
 
 //Setting data path
 let dataPath;
@@ -134,17 +134,25 @@ const debugExternalSource = getConvarString('txDebugExternalSource');
 
 
 /**
- * Convars - ZAP dependant
+ * Host type check
  */
 //Checking for ZAP Configuration file
 const zapCfgFile = path.join(dataPath, 'txAdminZapConfig.json');
-let zapCfgData, isZapHosting, forceInterface, forceFXServerPort, txAdminPort, loginPageLogo, defaultMasterAccount, deployerDefaults;
+let isZapHosting: boolean;
+let forceInterface;
+let forceFXServerPort;
+let txAdminPort;
+let loginPageLogo;
+let defaultMasterAccount;
+let deployerDefaults;
 const loopbackInterfaces = ['::1', '127.0.0.1', '127.0.1.1'];
+const isPterodactyl = !isWindows && process.env?.TXADMIN_ENABLE === '1';
 if (fs.existsSync(zapCfgFile)) {
+    isZapHosting = !isPterodactyl;
     console.log('Loading ZAP-Hosting configuration file.');
+    let zapCfgData;
     try {
         zapCfgData = JSON.parse(fs.readFileSync(zapCfgFile, 'utf8'));
-        isZapHosting = true;
         forceInterface = zapCfgData.interface;
         forceFXServerPort = zapCfgData.fxServerPort;
         txAdminPort = zapCfgData.txAdminPort;
@@ -197,7 +205,7 @@ if (fs.existsSync(zapCfgFile)) {
     }
 }
 if (verboseConvar) {
-    console.dir({ isZapHosting, forceInterface, forceFXServerPort, txAdminPort, loginPageLogo, deployerDefaults });
+    console.dir({ isPterodactyl, isZapHosting, forceInterface, forceFXServerPort, txAdminPort, loginPageLogo, deployerDefaults });
 }
 
 //Setting the variables in console without it having to importing from here (cyclical dependency)
@@ -227,6 +235,7 @@ export const convars = Object.freeze({
     debugPlayerlistGenerator,
     debugExternalSource,
     //Convars - zap dependant
+    isPterodactyl,
     isZapHosting,
     forceInterface,
     forceFXServerPort,

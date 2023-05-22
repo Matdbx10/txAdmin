@@ -60,7 +60,7 @@ async function handlePin(ctx) {
 
     //Checking the PIN
     if (ctx.request.body.pin !== globals.adminVault.addMasterPin) {
-        console.warn(`Wrong PIN for from: ${ctx.ip}`);
+        console.warn(`Wrong PIN from: ${ctx.ip}`);
         const message = 'Wrong PIN.';
         return ctx.utils.render('login', { template: 'noMaster', message });
     }
@@ -234,6 +234,7 @@ async function handleSave(ctx) {
         ctx.session.auth = await globals.adminVault.providers.citizenfx.getUserSession(
             ctx.session.tmpAddMasterTokenSet,
             ctx.session.tmpAddMasterUserInfo,
+            identifier,
         );
         ctx.session.auth.username = ctx.session.tmpAddMasterUserInfo.name;
         delete ctx.session.tmpAddMasterTokenSet;

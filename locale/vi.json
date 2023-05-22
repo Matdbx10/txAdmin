@@ -24,7 +24,8 @@
             "label_author": "Cấm bởi",
             "label_reason": "Lý do cấm",
             "label_id": "ID cấm",
-            "note_multiple_bans": "Lưu ý: bạn có nhiều hơn một lệnh cấm hoạt động đối với tài khoản của mình."
+            "note_multiple_bans": "Lưu ý: bạn có nhiều hơn một lệnh cấm hoạt động đối với tài khoản của mình.",
+            "note_diff_license": "Note: the ban above was applied for another <code>license</code>, which means some of your IDs/HWIDs match the ones associated with that ban."
         }
     },
     "whitelist_messages": {
@@ -170,7 +171,8 @@
                     "label": "Nâng cấp xe để kiểm tra tốc độ tối đa.",
                     "success": "Xe đã được nâng cấp",
                     "already_boosted": "Xe này đã được độ.",
-                    "unsupported_class": "Loại xe này không được hỗ trợ."
+                    "unsupported_class": "Loại xe này không được hỗ trợ.",
+                    "redm_not_mounted": "You can only boost when mounted on a horse."
                 }
             },
             "heal": {
@@ -320,7 +322,8 @@
             },
             "ids": {
                 "current_ids": "Định danh hiện tại",
-                "previous_ids": "Định danh được sử dụng trước đây"
+                "previous_ids": "Định danh được sử dụng trước đây",
+                "all_hwids": "All Hardware IDs"
             },
             "history": {
                 "title": "Lịch sử liên quan",

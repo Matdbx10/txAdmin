@@ -24,7 +24,8 @@
             "label_author": "Kitiltó neve",
             "label_reason": "Kitiltás indoka",
             "label_id": "Ban ID",
-            "note_multiple_bans": "Figyelem: Több mint egy aktív kitiltásod van ezen a fiókon."
+            "note_multiple_bans": "Figyelem: Több mint egy aktív kitiltásod van ezen a fiókon.",
+            "note_diff_license": "Note: the ban above was applied for another <code>license</code>, which means some of your IDs/HWIDs match the ones associated with that ban."
         }
     },
     "whitelist_messages": {
@@ -170,7 +171,8 @@
                     "label": "Boostold a járművedet!",
                     "success": "Jármű boostolva!",
                     "already_boosted": "Ezt a járművet már boostoltad.",
-                    "unsupported_class": "Ez a járműtípus nem támogatott."
+                    "unsupported_class": "Ez a járműtípus nem támogatott.",
+                    "redm_not_mounted": "You can only boost when mounted on a horse."
                 }
             },
             "heal": {
@@ -345,7 +347,8 @@
             },
             "ids": {
                 "current_ids": "Current Identifiers",
-                "previous_ids": "Previously Used Identifiers"
+                "previous_ids": "Previously Used Identifiers",
+                "all_hwids": "All Hardware IDs"
             }
         }
     }

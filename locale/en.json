@@ -24,7 +24,8 @@
             "label_author": "Banned by",
             "label_reason": "Ban Reason",
             "label_id": "Ban ID",
-            "note_multiple_bans": "Note: you have more than one active ban on your identifiers."
+            "note_multiple_bans": "Note: you have more than one active ban on your identifiers.",
+            "note_diff_license": "Note: the ban above was applied for another <code>license</code>, which means some of your IDs/HWIDs match the ones associated with that ban."
         }
     },
     "whitelist_messages": {
@@ -170,7 +171,8 @@
                     "label": "Boost the car to achieve max fun (and maybe speed)",
                     "success": "Vehicle boosted!",
                     "already_boosted": "This vehicle was already boosted.",
-                    "unsupported_class": "This vehicle class is not supported."
+                    "unsupported_class": "This vehicle class is not supported.",
+                    "redm_not_mounted": "You can only boost when mounted on a horse."
                 }
             },
             "heal": {
@@ -320,7 +322,8 @@
             },
             "ids": {
                 "current_ids": "Current Identifiers",
-                "previous_ids": "Previously Used Identifiers"
+                "previous_ids": "Previously Used Identifiers",
+                "all_hwids": "All Hardware IDs"
             },
             "history": {
                 "title": "Related history",

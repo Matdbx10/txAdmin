@@ -71,9 +71,9 @@ end)
 if not TX_MENU_ENABLED then return end
 
 -- Checking with server if we are an admin
-TriggerServerEvent('txsv:checkAdminStatus')
+TriggerServerEvent('txsv:checkIfAdmin')
 
--- Triggered as callback of txsv:checkAdminStatus
+-- Triggered as callback of txsv:checkIfAdmin
 RegisterNetEvent('txcl:setAdmin', function(username, perms, rejectReason)
   if type(perms) == 'table' then
     debugPrint("^2[AUTH] logged in as '" .. username .. "' with perms: " .. json.encode(perms or "nil"))
@@ -105,9 +105,9 @@ local function retryAuthentication()
   menuPermissions = {}
   sendMenuMessage('resetSession')
   sendMenuMessage('setPermissions', menuPermissions)
-  TriggerServerEvent('txsv:checkAdminStatus')
+  TriggerServerEvent('txsv:checkIfAdmin')
 end
-RegisterNetEvent('txAdmin:menu:reAuth', retryAuthentication)
+RegisterNetEvent('txcl:reAuth', retryAuthentication)
 RegisterCommand('txAdmin-reauth', function ()
   sendSnackbarMessage('info', 'Retrying menu authentication.', false)
   awaitingReauth = true
@@ -134,7 +134,7 @@ end)
 
 
 -- Will toggle debug logging
-RegisterNetEvent('txAdmin:events:setDebugMode', function(enabled)
+RegisterNetEvent('txcl:setDebugMode', function(enabled)
   TX_DEBUG_MODE = enabled
   sendMenuMessage('setDebugMode', TX_DEBUG_MODE)
 end)
@@ -161,6 +161,7 @@ RegisterNUICallback('reactLoaded', function(_, cb)
     updateServerCtx()
     while ServerCtx == false do Wait(0) end
     debugPrint("ServerCtx loaded, sending variables.")
+    sendMenuMessage('setGameName', GAME_NAME)
     sendMenuMessage('setDebugMode', TX_DEBUG_MODE)
     sendMenuMessage('setServerCtx', ServerCtx)
     sendMenuMessage('setPermissions', menuPermissions)
@@ -176,4 +177,39 @@ RegisterNUICallback('closeMenu', function(_, cb)
   SetNuiFocus(false)
   SetNuiFocusKeepInput(false)
   cb({})
+end)
+
+
+-- Audio play callback
+RegisterNUICallback('playSound', function(sound, cb)
+  playLibrarySound(sound)
+  cb({})
+end)
+
+-- Heals local player
+RegisterNetEvent('txcl:heal', function()
+  debugPrint('Received heal event, healing to full')
+  local ped = PlayerPedId()
+  local pos = GetEntityCoords(ped)
+  local heading = GetEntityHeading(ped)
+  if IsEntityDead(ped) then
+      NetworkResurrectLocalPlayer(pos[1], pos[2], pos[3], heading, false, false)
+  end
+  ResurrectPed(ped)
+  SetEntityHealth(ped, GetEntityMaxHealth(ped))
+  ClearPedBloodDamage(ped)
+  RestorePlayerStamina(PlayerId(), 100.0)
+  if IS_REDM then
+      Citizen.InvokeNative(0xC6258F41D86676E0, ped, 0, 100) -- SetAttributeCoreValue
+      Citizen.InvokeNative(0xC6258F41D86676E0, ped, 1, 100) -- SetAttributeCoreValue
+      Citizen.InvokeNative(0xC6258F41D86676E0, ped, 2, 100) -- SetAttributeCoreValue
+  end
+end)
+
+-- Tell the user he is an admin and that /tx is available
+AddEventHandler('playerSpawned', function()
+  Wait(15000)
+  if menuIsAccessible then
+      sendMenuMessage('showMenuHelpInfo', {})
+  end
 end)

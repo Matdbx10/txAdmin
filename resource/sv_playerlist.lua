@@ -49,7 +49,7 @@ CreateThread(function()
         for yieldCounter, serverID in pairs(players) do
             -- Updating player vehicle/health
             -- NOTE: after testing this seem not to need any error handling
-            local health = 0
+            local health = -1
             local vType = -1
             if onesyncEnabled == true then
                 local ped = GetPlayerPed(serverID)
@@ -59,10 +59,7 @@ CreateThread(function()
                 else
                     vType = vTypeMap["walking"]
                 end
-                -- Its extremely hard to normalize this value to actually reflect
-                -- it as a percentage of the current users max health depending on the server
-                -- Therefore, lets just handle for base case of maxHealth 175 and health range from 100-175
-                health = floor((GetEntityHealth(ped) - 100) / (GetEntityMaxHealth(ped) - 100) * 100)
+                health = GetPedHealthPercent(ped)
             end
 
             -- Updating TX_PLAYERLIST
@@ -139,7 +136,7 @@ AddEventHandler('playerJoining', function(srcString, _oldID)
 
     -- relaying this info to all admins
     for adminID, _ in pairs(TX_ADMINS) do
-        TriggerClientEvent('txcl:updatePlayer', adminID, source, playerData.name)
+        TriggerClientEvent('txcl:plist:updatePlayer', adminID, source, playerData.name)
     end
 end)
 
@@ -159,7 +156,7 @@ AddEventHandler('playerDropped', function(reason)
 
     -- relaying this info to all admins
     for adminID, _ in pairs(TX_ADMINS) do
-        TriggerClientEvent('txcl:updatePlayer', adminID, source, false)
+        TriggerClientEvent('txcl:plist:updatePlayer', adminID, source, false)
     end
 end)
 
@@ -180,7 +177,7 @@ end)
 -- for serverID=1, 500 do
 --     fake_playerlist[serverID] = getFakePlayer()
 -- end
-RegisterNetEvent('txsv:getDetailedPlayerlist', function()
+RegisterNetEvent('txsv:req:plist:getDetailed', function()
     if TX_ADMINS[tostring(source)] == nil then
         debugPrint('Ignoring unauthenticated getDetailedPlayerlist() by ' .. source)
         return
@@ -196,7 +193,7 @@ RegisterNetEvent('txsv:getDetailedPlayerlist', function()
         admins[#admins + 1] = tonumber(adminID)
     end
     --DEBUG replace admins with fake_admins
-    TriggerClientEvent('txcl:setDetailedPlayerlist', source, players, admins)
+    TriggerClientEvent('txcl:plist:setDetailed', source, players, admins)
 end)
 
 
@@ -214,5 +211,5 @@ function sendInitialPlayerlist(adminID)
     -- debugPrint("====================================")
 
     debugPrint('Sending initial playerlist to ' .. adminID)
-    TriggerClientEvent('txcl:setInitialPlayerlist', adminID, payload)
+    TriggerClientEvent('txcl:plist:setInitial', adminID, payload)
 end

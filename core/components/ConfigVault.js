@@ -136,6 +136,7 @@ export default class ConfigVault {
                     cfg.playerDatabase.whitelistRejectionMessage,
                     'Please join http://discord.gg/example and request to be whitelisted.',
                 ),
+                requiredBanHwidMatches: toDefault(cfg.playerDatabase.requiredBanHwidMatches, 1),
                 banRejectionMessage: toDefault(
                     cfg.playerDatabase.banRejectionMessage,
                     'You can join http://discord.gg/example to appeal this ban.',
@@ -172,6 +173,14 @@ export default class ConfigVault {
             //Merging portuguese
             if (out.global.language === 'pt_PT' || out.global.language === 'pt_BR') {
                 out.global.language = 'pt';
+            }
+
+            //Fixing resourceStartingTolerance being saved as string
+            if (typeof out.monitor.resourceStartingTolerance === 'string') {
+                out.monitor.resourceStartingTolerance = parseInt(out.monitor.resourceStartingTolerance);
+                if (isNaN(out.monitor.resourceStartingTolerance)) {
+                    out.monitor.resourceStartingTolerance = 120;
+                }
             }
         } catch (error) {
             console.verbose.dir(error);
@@ -221,6 +230,7 @@ export default class ConfigVault {
             cfg.playerDatabase.whitelistMode = cfg.playerDatabase.whitelistMode || 'disabled';
             cfg.playerDatabase.whitelistedDiscordRoles = cfg.playerDatabase.whitelistedDiscordRoles || [];
             cfg.playerDatabase.whitelistRejectionMessage = cfg.playerDatabase.whitelistRejectionMessage || '';
+            cfg.playerDatabase.requiredBanHwidMatches = parseInt(cfg.playerDatabase.requiredBanHwidMatches) ?? 1;
             cfg.playerDatabase.banRejectionMessage = cfg.playerDatabase.banRejectionMessage || '';
 
             //WebServer

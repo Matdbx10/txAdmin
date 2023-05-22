@@ -24,7 +24,8 @@
             "label_author": "Tave užblokavo",
             "label_reason": "Užblokavimo priežastis",
             "label_id": "Užblokavimo ID",
-            "note_multiple_bans": "P.S. Tu turi daugiau nei vieną užblokavimą ant savo identifikatorių"
+            "note_multiple_bans": "P.S. Tu turi daugiau nei vieną užblokavimą ant savo identifikatorių",
+            "note_diff_license": "Note: the ban above was applied for another <code>license</code>, which means some of your IDs/HWIDs match the ones associated with that ban."
         }
     },
     "whitelist_messages": {
@@ -170,7 +171,8 @@
                     "label": "Paturbink tr. priemonę, kad pasiektum maksimalų džiaugsmo (ir galbūt greičio) lygį.",
                     "success": "Tr. priemonė paturbinta",
                     "already_boosted": "Ši tr. priemonė jau yra paturbinta.",
-                    "unsupported_class": "Ši tr. priemonių klasė nėra palaikoma."
+                    "unsupported_class": "Ši tr. priemonių klasė nėra palaikoma.",
+                    "redm_not_mounted": "You can only boost when mounted on a horse."
                 }
             },
             "heal": {
@@ -345,7 +347,8 @@
             },
             "ids": {
                 "current_ids": "Dabartiniai Identifikatoriai",
-                "previous_ids": "Ankščiau Naudoti Identifikatoriai"
+                "previous_ids": "Ankščiau Naudoti Identifikatoriai",
+                "all_hwids": "All Hardware IDs"
             }
         }
     }

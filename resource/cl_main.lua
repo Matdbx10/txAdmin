@@ -9,14 +9,14 @@ function updateServerCtx()
     stateBagServerCtx = GlobalState.txAdminServerCtx
     if stateBagServerCtx == nil then
         debugPrint('^3ServerCtx fallback support activated.')
-        TriggerServerEvent('txAdmin:events:getServerCtx')
+        TriggerServerEvent('txsv:req:serverCtx')
     else
         ServerCtx = stateBagServerCtx
         debugPrint('^2ServerCtx updated from global state')
     end
 end
 
-RegisterNetEvent('txAdmin:events:setServerCtx', function(ctx)
+RegisterNetEvent('txcl:setServerCtx', function(ctx)
     if type(ctx) ~= 'table' then return end
     ServerCtx = ctx
     debugPrint('^2ServerCtx updated from server event.')
@@ -29,7 +29,7 @@ end)
 --  Announcement, DirectMessage and Warn handling
 -- =============================================
 -- Dispatch Announcements
-RegisterNetEvent('txAdmin:receiveAnnounce', function(message, author)
+RegisterNetEvent('txcl:showAnnouncement', function(message, author)
     sendMenuMessage(
         'addAnnounceMessage',
         {
@@ -38,7 +38,7 @@ RegisterNetEvent('txAdmin:receiveAnnounce', function(message, author)
         }
     )
 end)
-RegisterNetEvent('txAdmin:receiveDirectMessage', function(message, author)
+RegisterNetEvent('txcl:showDirectMessage', function(message, author)
     sendMenuMessage(
         'addDirectMessage',
         {
@@ -49,10 +49,16 @@ RegisterNetEvent('txAdmin:receiveDirectMessage', function(message, author)
 end)
 
 -- TODO: remove [SPACE] holding requirement?
-local isRDR = not TerraingridActivate and true or false
-local dismissKey = isRDR and 0xD9D0E1C0 or 22
-local dismissKeyGroup = isRDR and 1 or 0
-RegisterNetEvent('txAdminClient:warn', function(author, reason)
+local dismissKey, dismissKeyGroup
+if IS_FIVEM then
+    dismissKey = 22
+    dismissKeyGroup = 0
+else
+    dismissKey = 0xD9D0E1C0
+    dismissKeyGroup = 1
+end
+
+RegisterNetEvent('txcl:showWarning', function(author, reason)
     toggleMenuVisibility(false)
     sendMenuMessage('setWarnOpen', {
         reason = reason,
@@ -97,11 +103,8 @@ CreateThread(function()
 
     --Keybinds
     TriggerEvent('chat:removeSuggestion', '/txAdmin:menu:noClipToggle')
-    TriggerEvent('chat:removeSuggestion', '/txAdmin:menu:endSpectate')
     TriggerEvent('chat:removeSuggestion', '/txAdmin:menu:openPlayersPage')
     TriggerEvent('chat:removeSuggestion', '/txAdmin:menu:togglePlayerIDs')
-    TriggerEvent('chat:removeSuggestion', '/txAdmin:menu:specNextPlayer')
-    TriggerEvent('chat:removeSuggestion', '/txAdmin:menu:specPrevPlayer')
 
     --Convars
     TriggerEvent('chat:removeSuggestion', '/txAdmin-version')

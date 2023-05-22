@@ -26,137 +26,138 @@
 - [x] Web: test all pages I added `checkApiLogoutRefresh`
 - [x] Resource: refactor `/txAdmin-reauth` to return the full cause in the snackbar
 - [x] Resource: reorder `sv_main.lua` and add `local` prefix to most if not all functions
-- [ ] Resource: rename menu events to `txAdmin:menu:clreq:xxx` and `txAdmin:menu:svresp:xxx`?
-- [ ] Resource: fix some RedM issues
-- [ ] make `recipes/indexv4.json` dropping version and adding tags
+- [x] Resource: rename menu events to `txsv:xxx` and `txcl:xxx`
+- [x] Resource: full redm compatibility
+    - [x] Player Mode
+        - [x] noclip
+            - [x] controls
+            - [x] bug: after exiting, the mouse doesn't move
+            - [x] fix behavior while seated on vehicle or horse
+            - [x] scaleform/prompt
+        - [x] god mode
+        - [x] super jump
+            - [x] fix stamina bug
+        - [x] normal
+        - [x] particles
+    - [x] Teleport
+        - [x] waypoint
+        - [x] coords
+        - [x] back
+        - [x] copy coords
+    - [x] Vehicle
+        - [x] spawn
+        - [x] fix
+        - [x] delete
+        - [x] boost (doesn't work, disable button)
+    - [x] Heal
+        - [x] self
+        - [x] everyone
+    - [x] Announcements
+    - [x] reset world area (doesn't work, disable button)
+    - [x] player ids
+    - [x] logger (death reasons, explosions, etc)
+
+    - [x] Actions
+        - [x] heal
+        - [x] go to
+        - [x] bring
+        - [x] spectate
+            - [x] copy prompt helper from freecam
+        - [x] freeze
+        - [x] troll: set drunk
+        - [x] troll: set fire
+        - [x] troll: wild attack
+
+- [x] Generalize the sound function in `cl_misc.lua` and replace the other `PlaySoundFrontend`
+- [x] Make Z optional in tp to coords feature
+- [x] Vehicle spawn should accept `[horse, cart, boat]` options, maybe add the buttons
+- [x] Find out why the players page doesn't reflect the player health, maybe it is client side only?
+- [x] Deprecate `cl_misc.lua`: move `playLibrarySound` to `cl_functions`, the rest to `cl_base`
+
+- [x] make `recipes/indexv4.json` dropping version and adding tags
     - drop author field as well?
     - remove zap esx pack? last update was 6 months ago
-- [ ] add redm recipes
-    - use `sv_enforceGameBuild 1491`
-    - need to add a tracking for % of redm/fivem/libertym servers
-- [ ] add `sv_enforceGameBuild 2699` for fivem recipe
-- [ ] add hwid token bans
-    - add an option to wipe all hwids from the database
-- [ ] update discord.js - should be drop in
-- [ ] add bot enabled / whitelist back into stats
-- [ ] inject consts isZapHosting and isPterodactyl in ctxUtil
+- [x] add `sv_enforceGameBuild 2699` for fivem recipe
+- [x] add redm cfx default recipe (use `sv_enforceGameBuild 1491`)
+- [x] Check again for any added `print()`
+- [x] Update packages... again
+- [x] add hwid token bans (#446)
+    - [x] save player hwids + ban with hwid + check join using hwid as well
+    - [x] rename `action[].identifiers` to `action[].ids`
+    - [x] add settings page option to configure the required hwid matches
+    - [x] add ban message clarification if its from another license
+    - [x] add an option to wipe all hwids from the database
+- [x] add hwids to player modals
+- [x] add vorp recipe
+    - [x] reorganize folder
+    - [x] `server.cfg`:
+        - set steam_webApiKey "{{steam_webApiKey}}"
+        - clean the lines at the end of server.cfg
+        - server.cfg fix exec line 40 [vorp_official_plugins]
+    - [x] find out where that .replxx_history is coming from
+> beta1 release
+
+- [x] fix system log page font fallback
+- [x] remove debug noclip command
+- [x] fix playerBanned and actionRevoked events playerIds and add playerHwids
+- [x] updated some packages
+- [x] fix adminvault behavior on empty `admins.json` file
+- [x] change `cl_main.lua` RedM detection
+- [x] check/merge redm vehicle boost
+> beta2 release
+
+- [x] bot should check if it has any dangerous permission
+- [x] improve zap/ptero detection
+- [x] flexibilized ad options
+- [x] stats: 
+    - [x] adapt the new runtime specs, separate temp stats from classic stats
+    - [x] add bot enabled / whitelist back into stats
+    - [x] add isPterodactyl to stats
+    - [x] start tracking the ban search duration
+    - [x] jwe
+    - [x] don't forget to reset StatisticsManager's cron func interval
+    - [x] when changing whitelist mode in settings, need to reset the time counter
+- [x] add mongolian translation + merge bg.json
+- [x] last round of testing everything
 
 
-# RedM Migrations
-- [ ] Player Mode
-    - [ ] noclip
-        - [x] controls
-        - [x] bug: after exiting, the mouse doesn't move
-        - [ ] fix behavior while seated on vehicle or horse
-        - [x] scaleform/prompt
-    - [x] god mode
-    - [x] super jump
-        - [x] fix stamina bug
-    - [x] normal
-    - [x] particles
-- [x] Teleport
-    - [x] waypoint
-    - [x] coords
-    - [x] back
-    - [x] copy coords
-- [ ] Vehicle
-    - [ ] spawn
-    - [ ] fix
-    - [ ] delete
-    - [ ] boost
-- [x] Heal
-    - [x] self
-    - [x] everyone
-- [x] Announcements
-- [ ] reset world area (FIXME: doesn't work, disable button?)
-- [x] player ids
-- [ ] logger (death reasons, explosions, etc)
+=======================================================================
 
-- [ ] Actions
-    - [x] heal
-    - [x] go to
-    - [x] bring
-    - [ ] spectate
-        - [x] copy prompt helper from freecam
-    - [x] freeze
-    - [x] troll: set drunk
-    - [x] troll: set fire
-    - [x] troll: wild attack
-    
-- [x] Generalize the sound function in `cl_misc.lua` and replace the other `PlaySoundFrontend`
-- [ ] Deprecate `cl_misc.lua`: move `playLibrarySound` to `cl_functions`, the rest to `cl_base`
-- [ ] Find out why the players page doesn't reflect the player health, maybe it is client side only?
-- [ ] check again for any added `print()`
+Perf charts:
 
--1885.7838, 2637.4695, 675.8902, 86.1232
+https://media.discordapp.net/attachments/1058975904811991080/1078919282924208238/image.png
+https://media.discordapp.net/attachments/589106731376836608/1108806732991430736/image.png
+https://media.discordapp.net/attachments/885648563105837116/1107449123881365565/image.png
+https://media.discordapp.net/attachments/885648563105837116/1107446997369241600/image.png
+https://cdn.discordapp.com/attachments/885648563105837116/1086875664432508968/image.png
+https://media.discordapp.net/attachments/885648563105837116/1080548734292742214/SPOILER_image.png
+https://media.discordapp.net/attachments/885648563105837116/1080493539374420049/image.png
+https://media.discordapp.net/attachments/885648563105837116/1079422080820453397/image.png
+https://media.discordapp.net/attachments/1044112583201927189/1109100201366528110/saS3WOdi.png
+https://media.discordapp.net/attachments/885648563105837116/1079097577288499420/image.png
+https://media.discordapp.net/attachments/885648563105837116/1059850236421492736/image.png
+https://media.discordapp.net/attachments/881583434802294894/1109145714824597575/image.png
 
--- DEBUG Commands
-RegisterCommand('spec1', function()
-    isSpectateEnabled = true
-    createInstructionalThreads()
-end)
-RegisterCommand('spec0', function()
-    isSpectateEnabled = false
-end)
+=======================================================================
+> FIXME: chat doesn't build, possibly docker image issue
+docker run \
+  -p 40121:40120 \
+  -p 30121:30120 -p 30121:30120/udp \
+  --name fxstest \
+  --volume "E:\\FiveM\\dockerFxserver":/fxserver \
+  -it ubuntu bash
 
-SetMinimapHideFow(true)
+docker exec -it fxstest bash
+apt update
+apt install -y wget xz-utils nano iputils-ping bind9-host mycli
 
-return TaskLeaveAnyVehicle(ped, 0, 16)
+mycli -u root -h 172.17.0.2
 
-return IsPedOnMount(ped)
--- redm: 1 if in horse, false if not, false if in carriage
--- fivem: xxx if in horse, false if not, false if in car
+cd /fxserver
+wget https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/6427-843247aae475eb586950a706015e89033e01b3f4/fx.tar.xz
+tar xvf fx.tar.xz
 
-return IsPedOnVehicle(ped)
--- redm: false if in horse, false if not, 1 if in carriage
--- fivem: xxx if in horse, false if not, false if in car
-
-
-
-FIXME: renomear eventos abaixo
-TODO: ver se tem como setar sem o menu estar habilitado
-txAdmin:events:getServerCtx
-txAdmin:events:setServerCtx
-
-
-RegisterNetEvent\(['"]
-
-txAdmin:menu:clreq:xxx
-txAdmin:menu:svresp:xxx
-
-txAdmin:menu:clReq:xxx
-txAdmin:menu:svResp:xxx
-
-txAdmin:req:xxx
-txAdmin:resp:xxx
-
-
-
-function convertHrtime(hrtime) {
-	const nanoseconds = hrtime;
-	const number = Number(nanoseconds);
-	const milliseconds = number / 1000000;
-	const seconds = number / 1000000000;
-
-	return {
-		seconds,
-		milliseconds,
-		nanoseconds
-	};
-}
-
-const start = process.hrtime.bigint();
-
-for (let i = 0; i < 1000; i++) {
-    process.hrtime.bigint();
-}
-
-const duration = process.hrtime.bigint() - start;
-console.log(`${duration}ns`);
-console.dir(convertHrtime(duration));
-
-
-
+=======================================================================
 
 (function() {
     var s = document.createElement('script');
@@ -165,19 +166,24 @@ console.dir(convertHrtime(duration));
 })()
 
 
-cache static files
+=======================================================================
 
 
 ## Optional
 - [ ] bot: fix http agent options for localAddress
 - [ ] bot: add rate limit events to diagnostics page
 - [ ] update readme with new features and contributing warning
-- [ ] stats: 
-    - [ ] ????
-    - [ ] jwe
+
 
 
 # Next up:
+- [ ] Add a tracking for % of redm/fivem/libertym servers to txTracker
+- [ ] clean a few of the dead stuff from databus
+- [ ] improve `DiscordBot.resolveMemberRoles()` cache handling
+- [ ] maybe add some debug logging to `AdminVault.checkAdminsFile()`, to find out why so many people are having issues with their logins
+    - maybe even add to the login failed page something like "admin file was reset or modified XXX time ago"
+- [ ] remove old databus.txStatsData stuff
+- [ ] QuantileArrayOutput for time stuff - use q5/q95 to help me define the buckets
 - [ ] xxxxxx
 
 
@@ -190,7 +196,7 @@ ScanResourceRoot('C:/whatever/resources/', data => {
 
 
 
-
+=======================================================================
 
 
 
@@ -438,7 +444,7 @@ Instance[]:
 - Scheduler
 - PlayerController > PlaylistManager
 - ResourcesManager
-- StatsCollector > StatsManager
+- StatisticsManager
 
 Questions:
 - How to make the database interface (currently in playerController)
@@ -666,6 +672,10 @@ https://kinark.github.io/Materialize-stepper/
 
 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 
+### RedM stuff
+https://github.com/femga/rdr3_discoveries
+https://vespura.com/doc/natives/
+
 
 =======================================
 
@@ -707,6 +717,7 @@ export TXADMIN_DEFAULT_LICENSE="cfxk_xxxxxxxxxxxxxxxxxxxx_xxxxx"
 npx depcheck
 npm-upgrade
 con_miniconChannels script:monitor*
+con_miniconChannels script:runcode
 +setr txAdmin-debugMode true
 nui_devtoold mpMenu
 

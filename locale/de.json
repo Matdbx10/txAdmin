@@ -24,7 +24,8 @@
             "label_author": "Gebannt von",
             "label_reason": "Grund",
             "label_id": "Bann-ID",
-            "note_multiple_bans": "Es gibt mehr als einen aktiven Bann für diesen Identifier"
+            "note_multiple_bans": "Info: Es gibt mehr als einen aktiven Bann für diesen Identifier",
+            "note_diff_license": "Info: der oben angezeigte Ban wurde mit einer anderen <code>license</code> gespeichert. Das bedeutet, dass deine IDs/HWIDs passend sind wie zu diesem Ban."
         }
     },
     "whitelist_messages": {
@@ -170,7 +171,8 @@
                     "label": "Booste das Fahrzeug",
                     "success": "Fahrzeug geboosted.",
                     "already_boosted": "Dieses Fahrzeug wurde schon geboosted!",
-                    "unsupported_class": "Diese Fahrzeugart wird nicht unterstützt."
+                    "unsupported_class": "Diese Fahrzeugart wird nicht unterstützt.",
+                    "redm_not_mounted": "Du kannst dich nur boosten, wenn du auf einem Pferd sitzt."
                 }
             },
             "heal": {
@@ -345,7 +347,8 @@
             },
             "ids": {
                 "current_ids": "Aktuelle Identifier",
-                "previous_ids": "Zuvor benutzte Identifier"
+                "previous_ids": "Zuvor benutzte Identifier",
+                "all_hwids": "Alle Hardware IDs"
             }
         }
     }

@@ -49,12 +49,6 @@ export default class DiscordBot {
         //     }
         // }
     }
-    readonly usageStats = {
-        addwl: 0,
-        help: 0,
-        status: 0,
-        txadmin: 0,
-    };
     readonly cooldowns = new Map();
     #client: Client | undefined;
     guild: Discord.Guild | undefined;
@@ -153,7 +147,7 @@ export default class DiscordBot {
      * Update persistent status and activity
      */
     async updateStatus() {
-        if (!this.#client?.isReady()) {
+        if (!this.#client?.isReady() || !this.#client.user) {
             console.verbose.warn('not ready yet to update status');
             return false;
         }
@@ -197,6 +191,7 @@ export default class DiscordBot {
             type ErrorOptData = {
                 code?: string;
                 clientId?: string;
+                prohibitedPermsInUse?: string[];
             }
             const sendError = (msg: string, data: ErrorOptData = {}) => {
                 console.error(msg);
@@ -221,7 +216,7 @@ export default class DiscordBot {
 
             //Setup Ready listener
             this.#client.on('ready', async () => {
-                if (!this.#client?.isReady()) throw new Error(`ready event while not being ready`);
+                if (!this.#client?.isReady() || !this.#client.user) throw new Error(`ready event while not being ready`);
 
                 //Fetching guild
                 const guild = this.#client.guilds.cache.find((guild) => guild.id === this.config.guild);
@@ -237,6 +232,40 @@ export default class DiscordBot {
                 this.guild = guild;
                 this.guildName = guild.name;
 
+                //Checking for dangerous permissions
+                // https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags
+                // These are the same perms that require 2fa enabled - although it doesn't apply here
+                const prohibitedPerms = [
+                    'Administrator', //'ADMINISTRATOR',
+                    'BanMembers', //'BAN_MEMBERS'
+                    'KickMembers', //'KICK_MEMBERS'
+                    'ManageChannels', //'MANAGE_CHANNELS',
+                    'ManageGuildExpressions', //'MANAGE_GUILD_EXPRESSIONS'
+                    'ManageGuild', //'MANAGE_GUILD',
+                    'ManageMessages', //'MANAGE_MESSAGES'
+                    'ManageRoles', //'MANAGE_ROLES',
+                    'ManageThreads', //'MANAGE_THREADS'
+                    'ManageWebhooks', //'MANAGE_WEBHOOKS'
+                    'ViewCreatorMonetizationAnalytics', //'VIEW_CREATOR_MONETIZATION_ANALYTICS'
+                ]
+                const botPerms = this.guild.members.me?.permissions.serialize();
+                if (!botPerms) {
+                    return sendError(`Discord bot could not detect its own permissions.`);
+                }
+                const prohibitedPermsInUse = Object.entries(botPerms)
+                    .filter(([permName, permEnabled]) => prohibitedPerms.includes(permName) && permEnabled)
+                    .map((x) => x[0])
+                if (prohibitedPermsInUse.length) {
+                    const name = this.#client.user.username;
+                    const perms = prohibitedPermsInUse.includes('Administrator')
+                        ? 'Administrator'
+                        : prohibitedPermsInUse.join(', ');
+                    return sendError(
+                        `This bot (${name}) has dangerous permissions (${perms}) and for your safety the bot has been disabled.`,
+                        { code: 'DangerousPermission' }
+                    );
+                }
+
                 //Fetching announcements channel
                 if (this.config.announceChannel) {
                     const fetchedChannel = this.#client.channels.cache.find((x) => x.id === this.config.announceChannel);
@@ -249,7 +278,8 @@ export default class DiscordBot {
                     }
                 }
 
-                this.#client.application.commands.set(slashCommands);
+                this.guild.commands.set(slashCommands);
+                this.#client.application?.commands.set([]); //if previously registered by tx before v6 or other bot
                 console.ok(`Started and logged in as '${this.#client.user.tag}'`);
                 this.updateStatus().catch();
 

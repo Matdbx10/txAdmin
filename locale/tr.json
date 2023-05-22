@@ -24,7 +24,8 @@
             "label_author": "Yasaklayan",
             "label_reason": "Yasaklanma Sebebi",
             "label_id": "Ban ID",
-            "note_multiple_bans": "Not: Tanımlayıcılarınız üzerinde birden fazla aktif yasağınız var."
+            "note_multiple_bans": "Not: Tanımlayıcılarınız üzerinde birden fazla aktif yasağınız var.",
+            "note_diff_license": "Note: the ban above was applied for another <code>license</code>, which means some of your IDs/HWIDs match the ones associated with that ban."
         }
     },
     "whitelist_messages": {
@@ -170,7 +171,8 @@
                     "label": "Maksimum eğlenceye (ve belki de hıza) ulaşmak için arabayı güçlendirin",
                     "success": "Araç güçlendirildi!",
                     "already_boosted": "This vehicle was already boosted.",
-                    "unsupported_class": "This vehicle class is not supported."
+                    "unsupported_class": "This vehicle class is not supported.",
+                    "redm_not_mounted": "You can only boost when mounted on a horse."
                 }
             },
             "heal": {
@@ -345,7 +347,8 @@
             },
             "ids": {
                 "current_ids": "Geçerli Tanımlayıcılar",
-                "previous_ids": "Daha Önce Kullanılan Tanımlayıcılar"
+                "previous_ids": "Daha Önce Kullanılan Tanımlayıcılar",
+                "all_hwids": "All Hardware IDs"
             }
         }
     }

@@ -24,7 +24,8 @@
             "label_author": "Autor",
             "label_reason": "Motivo",
             "label_id": "ID do ban",
-            "note_multiple_bans": "Nota: você tem mais de um ban ativo em seus ids."
+            "note_multiple_bans": "Nota: você tem mais de um ban ativo em seus ids.",
+            "note_diff_license": "Nota: o ban acima foi aplicado em outra <code>license</code>, o que significa que um de seus IDs/HWIDs condiz com algum deste ban."
         }
     },
     "whitelist_messages": {
@@ -170,7 +171,8 @@
                     "label": "Aumenta as caracterísiticas do veículo para atingir máxima diversão (e talvez velocidade)",
                     "success": "Nitro adicionado!",
                     "already_boosted": "Esse carro já tem nitro.",
-                    "unsupported_class": "Esta classe de veículo não é suportada."
+                    "unsupported_class": "Esta classe de veículo não é suportada.",
+                    "redm_not_mounted": "Você só pode usar \"nitro\" se estiver montado em um cavalo."
                 }
             },
             "heal": {
@@ -345,7 +347,8 @@
             },
             "ids": {
                 "current_ids": "IDs atuais",
-                "previous_ids": "IDs usados anteriormente"
+                "previous_ids": "IDs usados anteriormente",
+                "all_hwids": "Todos IDs de Hardware"
             }
         }
     }

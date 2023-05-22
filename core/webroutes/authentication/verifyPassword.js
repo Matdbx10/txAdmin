@@ -24,12 +24,12 @@ export default async function AuthVerify(ctx) {
         //Checking admin
         const admin = globals.adminVault.getAdminByName(ctx.request.body.username);
         if (!admin) {
-            console.warn(`Wrong username for from: ${ctx.ip}`);
+            console.warn(`Wrong username from: ${ctx.ip}`);
             renderData.message = 'Wrong Username!';
             return ctx.utils.render('login', renderData);
         }
         if (!VerifyPasswordHash(ctx.request.body.password.trim(), admin.password_hash)) {
-            console.warn(`Wrong password for from: ${ctx.ip}`);
+            console.warn(`Wrong password from: ${ctx.ip}`);
             renderData.message = 'Wrong Password!';
             return ctx.utils.render('login', renderData);
         }
@@ -45,8 +45,8 @@ export default async function AuthVerify(ctx) {
         };
 
         ctx.utils.logAction(`logged in from ${ctx.ip} via password`);
-        globals.databus.txStatsData.login.origins[ctx.txVars.hostType]++;
-        globals.databus.txStatsData.login.methods.password++;
+        globals?.statisticsManager.loginOrigins.count(ctx.txVars.hostType);
+        globals?.statisticsManager.loginMethods.count('password');
     } catch (error) {
         console.warn(`Failed to authenticate ${ctx.request.body.username} with error: ${error.message}`);
         console.verbose.dir(error);

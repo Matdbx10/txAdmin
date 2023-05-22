@@ -7,6 +7,10 @@ import { processActionList, processPlayerList } from './processor';
 import consoleFactory from '@extras/console';
 const console = consoleFactory(modulename);
 
+//Helper const
+const joinedValidIDKeys = Object.keys(consts.validIdentifiers).join('|');
+const idsRegex = new RegExp(`((${joinedValidIDKeys}):\\w+)`, 'g');
+
 
 /**
  * Handles the search functionality.
@@ -37,8 +41,6 @@ export default async function PlayerListSearch(ctx) {
 
     try {
         //Getting valid identifiers
-        const joinedValidIDKeys = Object.keys(consts.validIdentifiers).join('|');
-        const idsRegex = new RegExp(`((${joinedValidIDKeys}):\\w+)`, 'g');
         const idsArray = [...searchString.matchAll(idsRegex)]
             .map((x) => x[0])
             .filter((e, i, arr) => {
@@ -48,7 +50,7 @@ export default async function PlayerListSearch(ctx) {
         //IF searching for identifiers
         if (idsArray.length) {
             const actions = await dbo.chain.get('actions')
-                .filter((a) => idsArray.some((fi) => a.identifiers.includes(fi)))
+                .filter((a) => idsArray.some((fi) => a.ids.includes(fi)))
                 .take(512)
                 .cloneDeep()
                 .value();
@@ -74,7 +76,7 @@ export default async function PlayerListSearch(ctx) {
                 outData.resActions = await processActionList([action]);
 
                 const players = await dbo.chain.get('players')
-                    .filter((p) => action.identifiers.some((fi) => p.ids.includes(fi)))
+                    .filter((p) => action.ids.some((fi) => p.ids.includes(fi)))
                     .take(512)
                     .cloneDeep()
                     .value();

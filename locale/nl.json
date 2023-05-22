@@ -24,7 +24,8 @@
             "label_author": "Gebanned Door",
             "label_reason": "Ban Reden",
             "label_id": "Ban ID",
-            "note_multiple_bans": "Opmerking: U hebt meer dan één actieve ban op uw Identifiers."
+            "note_multiple_bans": "Opmerking: U hebt meer dan één actieve ban op uw Identifiers.",
+            "note_diff_license": "Opmerking: de bovenstaande ban werd toegepast voor een andere <code>license</code>, wat betekent dat sommige van jouw IDs/HWIDs matchen met degene die zijn geassocieerd met die ban."
         }
     },
     "whitelist_messages": {
@@ -170,7 +171,8 @@
                     "label": "Voer het voertuig op voor maximaal plezier (en misschien snelheid)",
                     "success": "Voertuig opgevoerd!",
                     "already_boosted": "Dit voertuig is al opgevoerd.",
-                    "unsupported_class": "Deze voertuigklasse wordt niet ondersteund."
+                    "unsupported_class": "Deze voertuigklasse wordt niet ondersteund.",
+                    "redm_not_mounted": "You can only boost when mounted on a horse."
                 }
             },
             "heal": {
@@ -345,7 +347,8 @@
             },
             "ids": {
                 "current_ids": "Huidige Identifiers",
-                "previous_ids": "Eerder gebruikte Identifiers"
+                "previous_ids": "Eerder gebruikte Identifiers",
+                "all_hwids": "All Hardware IDs"
             }
         }
     }

@@ -24,7 +24,8 @@
             "label_author": "Expulsado por",
             "label_reason": "Razón de la expulsión",
             "label_id": "Ban ID",
-            "note_multiple_bans": "Nota: tiene más de una prohibición activa en sus identificadores."
+            "note_multiple_bans": "Nota: tiene más de una prohibición activa en sus identificadores.",
+            "note_diff_license": "Nota: el baneo de arriba fue aplicado para otra <code>license</code>, lo que significa que alguno de tus IDs/HWIDs coinciden con los del baneo asociado."
         }
     },
     "whitelist_messages": {
@@ -170,7 +171,8 @@
                     "label": "Potencia el coche para conseguir la máxima diversión (y quizá velocidad)",
                     "success": "¡Vehículo potenciado!",
                     "already_boosted": "Este vehículo ya estaba potenciado.",
-                    "unsupported_class": "Esta clase de vehículo no es compatible."
+                    "unsupported_class": "Esta clase de vehículo no es compatible.",
+                    "redm_not_mounted": "You can only boost when mounted on a horse."
                 }
             },
             "heal": {
@@ -345,7 +347,8 @@
             },
             "ids": {
                 "current_ids": "Identificadores actuales",
-                "previous_ids": "Identificadores utilizados anteriormente"
+                "previous_ids": "Identificadores utilizados anteriormente",
+                "all_hwids": "All Hardware IDs"
             }
         }
     }
