@@ -55,8 +55,8 @@ export default class ConfigVault {
             this.config = this.setupConfigDefaults(this.configFile);
             this.setupFolderStructure();
         } catch (error) {
-            console.error(error.message);
-            process.exit(0);
+            console.error(error);
+            process.exit(5100);
         }
     }
 
@@ -247,8 +247,8 @@ export default class ConfigVault {
             //FXRunner
             cfg.fxRunner.logPath = cfg.fxRunner.logPath || `${this.serverProfilePath}/logs/fxserver.log`; //not in template
             cfg.fxRunner.autostart = (cfg.fxRunner.autostart === 'true' || cfg.fxRunner.autostart === true);
-            cfg.fxRunner.restartDelay = parseInt(cfg.fxRunner.restartDelay) || 1250; //not in template
-            cfg.fxRunner.shutdownNoticeDelay = parseInt(cfg.fxRunner.shutdownNoticeDelay) ?? 5; //not in template
+            cfg.fxRunner.restartDelay = parseInt(cfg.fxRunner.restartDelay) || 750; //not in template
+            cfg.fxRunner.shutdownNoticeDelay = parseInt(cfg.fxRunner.shutdownNoticeDelay) || 5; //not in template
             cfg.fxRunner.quiet = (cfg.fxRunner.quiet === 'true' || cfg.fxRunner.quiet === true);
         } catch (error) {
             console.verbose.dir(error);
@@ -276,7 +276,7 @@ export default class ConfigVault {
             }
         } catch (error) {
             console.error(`Failed to set up folder structure in '${this.serverProfilePath}/' with error: ${error.message}`);
-            process.exit();
+            process.exit(5101);
         }
     }
 

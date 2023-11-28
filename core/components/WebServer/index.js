@@ -18,7 +18,6 @@ import WebSocket from './webSocket';
 import { customAlphabet } from 'nanoid';
 import dict51 from 'nanoid-dictionary/nolookalikes';
 
-import { setHttpCallback } from '@citizenfx/http-wrapper';
 import { convars, txEnv } from '@core/globalData';
 import WebCtxUtils from './ctxUtils.js';
 import router from './router';
@@ -230,22 +229,15 @@ export default class WebServer {
         //Just in case i want to re-execute this function
         this.isListening = false;
 
-        //CitizenFX Callback
-        try {
-            setHttpCallback(this.httpCallbackHandler.bind(this, 'citizenfx'));
-        } catch (error) {
-            console.error('Failed to start Cfx.re Reverse Proxy Callback with error:');
-            console.dir(error);
-        }
-
         //HTTP Server
         try {
             const listenErrorHandler = (error) => {
                 if (error.code !== 'EADDRINUSE') return;
-                console.error(`Failed to start HTTP server, port ${error.port} already in use.`);
+                console.error(`Failed to start HTTP server, port ${error.port} is already in use.`);
                 console.error('Maybe you already have another txAdmin running in this port.');
-                console.error('If you want to run multiple txAdmin, check the documentation for the port convar.');
-                process.exit(1);
+                console.error('If you want to run multiple txAdmin instances, check the documentation for the port convar.');
+                console.error('You can also try restarting the host machine.');
+                process.exit(5800);
             };
             this.httpServer = HttpClass.createServer(this.httpCallbackHandler.bind(this, 'httpserver'));
             this.httpServer.on('error', listenErrorHandler);
@@ -266,7 +258,7 @@ export default class WebServer {
         } catch (error) {
             console.error('Failed to start HTTP server with error:');
             console.dir(error);
-            process.exit();
+            process.exit(5801);
         }
     }
 };
